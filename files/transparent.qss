@@ -1,0 +1,5 @@
+QWidget#StyleWidget
+{
+	background-color: none;
+	background-image: url(:/files/nature_1.jpg);
+}

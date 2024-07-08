@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainwindow_gui</class>
+ <widget class="QMainWindow" name="mainwindow_gui">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>810</width>
+    <height>860</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Gas</string>
+  </property>
+  <property name="documentMode">
+   <bool>false</bool>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>false</bool>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>751</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="1">
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="title">
+        <string>Write</string>
+       </property>
+       <widget class="QWidget" name="gridLayoutWidget_3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>351</width>
+          <height>91</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="1" column="1">
+          <widget class="QComboBox" name="comboBox_5"/>
+         </item>
+         <item row="0" column="1">
+          <widget class="QSpinBox" name="spinBox_4"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>Count</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string>Start Addr</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>Input</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QTextEdit" name="textEdit_3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>120</y>
+          <width>351</width>
+          <height>131</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>Read</string>
+       </property>
+       <widget class="QWidget" name="gridLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>351</width>
+          <height>91</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="1" column="1">
+          <widget class="QComboBox" name="comboBox_3"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Count</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Start Addr</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QSpinBox" name="spinBox_2"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Result</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QTextEdit" name="textEdit_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>120</y>
+          <width>351</width>
+          <height>131</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QTextEdit" name="textEdit">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>360</y>
+      <width>751</width>
+      <height>451</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_6">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>751</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Connect</string>
+    </property>
+    <widget class="QLabel" name="label_19">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>30</y>
+       <width>30</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Port</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_12">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>30</y>
+       <width>211</width>
+       <height>29</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="geometry">
+      <rect>
+       <x>410</x>
+       <y>30</y>
+       <width>71</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&amp;Browser...</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_20">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>41</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Mode</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_13">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>30</y>
+       <width>91</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>RTU</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>TCP</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="label_21">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>30</y>
+       <width>105</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Server Address</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spinBox_7">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>30</y>
+       <width>111</width>
+       <height>29</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QToolButton" name="toolButton_5">
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>30</y>
+       <width>29</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../../../../.designer/backup/images/disconnect.png</normaloff>../../../../.designer/backup/images/disconnect.png</iconset>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>810</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_Device">
+    <property name="title">
+     <string>&amp;Device</string>
+    </property>
+    <addaction name="action_connect"/>
+    <addaction name="action_disconnect"/>
+    <addaction name="separator"/>
+    <addaction name="action_exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Mode">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <widget class="QMenu" name="menu_debug">
+     <property name="title">
+      <string>&amp;Debug</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../../../../.designer/backup/images/test.png</normaloff>../../../../.designer/backup/images/test.png</iconset>
+     </property>
+     <addaction name="actionBMP280"/>
+     <addaction name="actionAHT20"/>
+     <addaction name="actionPump"/>
+     <addaction name="action_Valve"/>
+     <addaction name="action_MCF"/>
+    </widget>
+    <addaction name="actionmonitor"/>
+    <addaction name="separator"/>
+    <addaction name="menu_debug"/>
+   </widget>
+   <widget class="QMenu" name="menu_Option">
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <addaction name="action_serial"/>
+    <addaction name="separator"/>
+    <addaction name="actionpwb"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_About"/>
+    <addaction name="action_About_Qt"/>
+   </widget>
+   <addaction name="menu_Device"/>
+   <addaction name="menu_Mode"/>
+   <addaction name="menu_Option"/>
+   <addaction name="menu_Help"/>
+  </widget>
+  <action name="action_connect">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../.designer/backup/images/connect.png</normaloff>../../../../.designer/backup/images/connect.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;connect</string>
+   </property>
+   <property name="statusTip">
+    <string extracomment="connect device"/>
+   </property>
+  </action>
+  <action name="action_disconnect">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../.designer/backup/images/disconnect.png</normaloff>../../../../.designer/backup/images/disconnect.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;disconnect</string>
+   </property>
+   <property name="statusTip">
+    <string extracomment="discoonect device"/>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../.designer/backup/images/exit.jpeg</normaloff>../../../../.designer/backup/images/exit.jpeg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;exit</string>
+   </property>
+   <property name="statusTip">
+    <string extracomment="exit"/>
+   </property>
+  </action>
+  <action name="action_run">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../.designer/backup/images/run.png</normaloff>../../../../.designer/backup/images/run.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;run</string>
+   </property>
+   <property name="statusTip">
+    <string extracomment="Run mode: Dump Recycle Self"/>
+   </property>
+  </action>
+  <action name="action_serial">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../.designer/backup/images/settings.png</normaloff>../../../../.designer/backup/images/settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Serial</string>
+   </property>
+   <property name="statusTip">
+    <string extracomment="Set serial parameters"/>
+   </property>
+  </action>
+  <action name="actionBMP280">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../.designer/backup/images/temperature.png</normaloff>../../../../.designer/backup/images/temperature.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;BMP280</string>
+   </property>
+   <property name="statusTip">
+    <string extracomment="temperatue and pressure"/>
+   </property>
+  </action>
+  <action name="actionAHT20">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../.designer/backup/images/humidity.png</normaloff>../../../../.designer/backup/images/humidity.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;AHT20</string>
+   </property>
+   <property name="statusTip">
+    <string extracomment="humidity"/>
+   </property>
+  </action>
+  <action name="actionPump">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../.designer/backup/images/pump.png</normaloff>../../../../.designer/backup/images/pump.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Pump</string>
+   </property>
+   <property name="statusTip">
+    <string extracomment="Pump(12-100)"/>
+   </property>
+  </action>
+  <action name="action_Valve">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../.designer/backup/images/vs.png</normaloff>../../../../.designer/backup/images/vs.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Valve</string>
+   </property>
+   <property name="statusTip">
+    <string extracomment="ValveSwitch (ON dumop OFF recycle) "/>
+   </property>
+  </action>
+  <action name="action_MCF">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../.designer/backup/images/flowmeter.png</normaloff>../../../../.designer/backup/images/flowmeter.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;MFC</string>
+   </property>
+  </action>
+  <action name="actionmonitor">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../../../.designer/backup/images/monitor.png</normaloff>../../../../.designer/backup/images/monitor.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Monitor</string>
+   </property>
+  </action>
+  <action name="action_About">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="action_About_Qt">
+   <property name="text">
+    <string>&amp;About Qt</string>
+   </property>
+  </action>
+  <action name="actionpwb">
+   <property name="text">
+    <string>pwb</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

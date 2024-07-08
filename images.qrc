@@ -1,0 +1,19 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+  <file>images/connect.png</file>
+  <file>images/disconnect.png</file>
+  <file>images/exit.jpeg</file>
+  <file>images/flowmeter.png</file>
+  <file>images/gd.png</file>
+  <file>images/humidity.png</file>
+  <file>images/monitor.png</file>
+  <file>images/pump.png</file>
+  <file>images/rd.png</file>
+  <file>images/run.png</file>
+  <file>images/settings.png</file>
+  <file>images/temperature.png</file>
+  <file>images/test.png</file>
+  <file>images/vs.png</file>
+  <file>images/zero.png</file>
+</qresource>
+</RCC>
