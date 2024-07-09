@@ -19,6 +19,7 @@
 #include "QPainterPath"
 #include "QPainter"
 
+#include <QStatusBar>
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGraphicsView>
@@ -41,7 +42,7 @@ QT_CHARTS_USE_NAMESPACE
 
 struct v_led : public QWidget{
   v_led(QWidget* parent) : QWidget(parent) {}
-  QColor m_color = QColor("#86858c");
+  QColor m_color = QColor("D0CFCC");
 
 public:
   void setColor(QColor color) {m_color = color;}
@@ -60,7 +61,6 @@ class axis_tag;
 class monitors : public QWidget{
   Q_OBJECT
   typedef SwitchButton switch_button_t;
-  typedef v_led v_led_t;
 public:
   //inline QSize sizeHint() const override {return QSize(1580,990);}
   monitors(mainwindow*,QWidget* parent=nullptr);
@@ -83,6 +83,7 @@ public:
 
 
   //std::vector<int64_t> m_start_times;
+  QStatusBar* m_status_bar;
   int64_t m_start_time;
   std::string m_fname;
   QTimer m_timer;
@@ -97,7 +98,7 @@ public:
 
   std::ofstream m_fout;
   forward* m_forward;
-  std::vector<v_led_t*> m_leds;
+  std::vector<v_led*> m_leds;
 
   //void append(std::string const&)
   
@@ -129,6 +130,8 @@ public slots:
   void timer_slot1();
   void get();
   void unconnect();
+  void reload_serial_port();
+
 
 protected:
   void closeEvent(QCloseEvent* event) override; 
@@ -138,6 +141,7 @@ public:
   typedef QCPGraph qcp_graph_t;
   typedef std::vector<std::pair<double,std::string>> ticks_t;
   void init_qcp();
+  inline QStatusBar* status_bar() const {return m_status_bar;}
 
 private:
   ticks_t ticks_adapt(
@@ -155,6 +159,9 @@ private:
   std::atomic<int> m_read_error;
   std::unordered_map<std::string,std::shared_ptr<qcp_t>> qcp_plots;
   std::unordered_map<std::string,qcp_graph_t*> m_graphs;
+
+  //max_heap
+  std::unordered_map<std::string,std::deque<float>> m_caches;
   std::unordered_map<std::string,axis_tag*> m_axis_tags;
   std::unordered_map<std::string,std::shared_ptr<QTimer>> m_timers;
   QTimer mtimer, m_get_timer;

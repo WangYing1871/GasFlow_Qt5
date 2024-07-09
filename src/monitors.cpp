@@ -79,10 +79,15 @@ QCPRange range_trans02(QCPAxis* axis, float v,bool& c){
     //rt.upper = v+20, rt.lower = rt.upper-r.size(), c=true;
     rt.upper = v+20,  rt.upper = 10*((int)rt.upper/10), rt.lower = 0, c=true;
   else if ((v-r.lower)<=0.2*r.size()){
-    if (r.upper>=20)
+    if (r.upper>20)
     rt.upper -= 20, c = true;
   }
   return rt;
+}
+
+QCPRange range_trans03(std::deque<float>& data){
+  float v = *std::max_element(data.begin(),data.end());
+  return QCPRange(0,(int(v)/10+2)*10);
 }
 
 void syn_axis(QCPAxis* from, QCPAxis* to){
@@ -105,8 +110,8 @@ void v_led::paintEvent(QPaintEvent*){
   painter.save();
   painter.setPen(Qt::NoPen);
   painter.setBrush(QBrush(m_color));
-  painter.drawEllipse(QRect(0,0,size().width(),size().height()));
-  //painter.drawEllipse(0,0,100,100);
+  //painter.drawEllipse(QRect(0,0,size().width(),size().height()));
+  painter.drawEllipse(0,0,30,30);
   painter.restore();
 }
 
@@ -119,6 +124,9 @@ monitors::monitors(mainwindow* parent,QWidget* sub):
   ui.groupBox_2->setStyleSheet(form::group_box_font0);
   ui.groupBox_3->setStyleSheet(form::group_box_font0);
   ui.groupBox_4->setStyleSheet(form::group_box_font0);
+
+  m_status_bar = new QStatusBar(ui.widget_4);
+  //m_status_bar->showMessage("wangyingwangyingwangying");
 
   
 
@@ -153,6 +161,7 @@ monitors::monitors(mainwindow* parent,QWidget* sub):
   connect(ui.pushButton_9,&QAbstractButton::clicked,this,&monitors::selcet_mode);
   connect(ui.pushButton_12,&QAbstractButton::clicked,this,&monitors::reset_flow);
   connect(ui.pushButton_13,&QAbstractButton::clicked,this,&monitors::reset_pump);
+  connect(ui.pushButton_14,&QAbstractButton::clicked,this,&monitors::reload_serial_port);
 
   connect(&mtimer,&QTimer::timeout,this,&monitors::timer_slot1);
 
@@ -174,9 +183,9 @@ monitors::monitors(mainwindow* parent,QWidget* sub):
   m_forward->ui.lcdNumber_3->setDigitCount(2);
   m_forward->ui.lcdNumber_4->setDigitCount(2);
 
-  m_leds.emplace_back(new v_led(m_forward.ui->widget));
-  m_leds.emplace_back(new v_led(m_forward.ui->widget_2));
-  m_leds.emplace_back(new v_led(m_forward.ui->widget_3));
+  m_leds.emplace_back(new v_led(m_forward->ui.widget));
+  m_leds.emplace_back(new v_led(m_forward->ui.widget_2));
+  m_leds.emplace_back(new v_led(m_forward->ui.widget_3));
 
   connect(this,&monitors::unconnect_signal,this,&monitors::unconnect);
   //unable_progress_bar(m_forward->ui.progressBar);
@@ -184,6 +193,13 @@ monitors::monitors(mainwindow* parent,QWidget* sub):
 
 void monitors::unconnect(){
   stop();
+}
+
+void monitors::reload_serial_port(){
+  ui.comboBox_2->clear();
+  for (auto&& x : util::get_ports_name())
+    ui.comboBox_2->addItem(x.c_str());
+
 }
 
 
@@ -260,6 +276,7 @@ void monitors::init_qcp(){
   m_graphs.insert(std::make_pair("Temperature (°C)",qcp_graph_t));
   m_graphs.insert(std::make_pair("Pressure (kPa)",qcp_graph_p));
   m_graphs.insert(std::make_pair("Flow-Rate (ccm)",qcp_graph_f));
+  m_caches.insert(std::make_pair("Flow-Rate (ccm)",std::deque<float>{}));
 
   for (auto&& [x,y] : m_graphs){
     y->setName(x.c_str());
@@ -302,13 +319,14 @@ void monitors::ConnectModbus(){
     std::string device = ui.comboBox_2->currentText().toStdString();
     int slave_addr = ui.spinBox->value();
     auto cs = util::connect_modbus(device.c_str(),19200,'N',8,2,slave_addr);
-    if (cs.second){
+    if (cs.second && cs.first){
       _is_connect = true;
       ui.pushButton_2->setText("close");
       ui.comboBox_2->setEnabled(false);
+      ui.pushButton_14->setEnabled(false);
       ui.spinBox->setEnabled(false);
       m_modbus_context = cs.first;
-    util::info_to<QTextBrowser,util::log_mode::k_info>(
+      util::info_to<QTextBrowser,util::log_mode::k_info>(
         ui.textBrowser_3,
         "Link modbus device Ok.", " device: ", device
         ,"baud: ",19200
@@ -317,6 +335,15 @@ void monitors::ConnectModbus(){
           ,"stop_bit: ",2
           ,"slave_addr: ",slave_addr
           );
+      auto const& update_mcu = [&,this](){
+        int ec0 = modbus_read_registers(m_modbus_context,0,REG_END,m_data_frame.data);
+        int ec1 = modbus_read_bits(m_modbus_context,0,COIL_END,m_data_frame.device_coil);
+        if (ec0!=REG_END || ec1!=COIL_END){
+          log(2,"Update firmware status failed!"); return; }
+        update_mode();
+        update_forward();
+      };
+      update_mcu();
     }else{
       _is_connect = false;
       util::info_to<QTextBrowser,util::log_mode::k_error>(
@@ -330,12 +357,18 @@ void monitors::ConnectModbus(){
     ui.spinBox->setEnabled(true);
     ui.comboBox_2->setEnabled(true);
     ui.pushButton_2->setText("open");
+    ui.pushButton_14->setEnabled(true);
     _is_connect = false;
   }
 }
 
 
 void monitors::save_as(){
+  m_fname = "/"+util::time_to_str()+".csv";
+
+  QString path = QDir::currentPath() + QString(m_fname.c_str());
+  QString fileName = QFileDialog::getSaveFileName(this, tr("Save Data"),
+      path,tr("Csv Files (*.csv)"));
 }
 
 void monitors::timer_slot1(){
@@ -372,12 +405,14 @@ void monitors::timer_slot1(){
     float pc = util::to_float(m_data_frame.data+REG_MFC_RATE_PV);
     m_data_frame.rw_lock.unlock();
 
-    auto* axis = qcp_plots["flow"]->axisRect()->axis(QCPAxis::atRight,0);
-    auto rg0 = axis->range();
-    bool is_c;
-    axis->setRange(range_trans02(axis,pc,is_c));
-    
-
+    auto& plots_ref = m_caches.at("Flow-Rate (ccm)");
+    plots_ref.push_back(pc);
+    if (plots_ref.size()>=240) plots_ref.pop_front();
+    qcp_plots["flow"]->axisRect()->axis(QCPAxis::atRight,0)
+      ->setRange(range_trans03(plots_ref));
+    //auto rg0 = axis->range();
+    //bool is_c;
+    //axis->setRange(range_trans02(axis,pc,is_c));
 
     m_graphs["Temperature (°C)"]->addData(tt,yt);
     m_graphs["Pressure (kPa)"]->addData(tt,pt);
@@ -397,6 +432,7 @@ void monitors::timer_slot1(){
   //debug_out(qcp_plots["sensors"]->xAxis->range().upper);
 
   for (auto&& [x,y] : qcp_plots) y->replot();
+  m_status_bar->showMessage("CCCC",700);
 }
 
 void monitors::log(size_t mode,std::string const& value){
@@ -456,9 +492,9 @@ void monitors::init(){
   //for (auto&& x : m_parent->m_comps.m_components){ x.second->close(); }
   std::vector<std::pair<std::string,monitor*>> ms; 
 
-  m_forward->ui.textBrowser->setFontPointSize(26);
+  m_forward->ui.textBrowser->setFontPointSize(18);
   m_forward->ui.textBrowser->setAlignment(Qt::AlignJustify);
-  m_forward->ui.textBrowser_2->setFontPointSize(26);
+  m_forward->ui.textBrowser_2->setFontPointSize(18);
   m_forward->ui.textBrowser_2->setAlignment(Qt::AlignJustify);
   //Qt::Alignment ali = ui.textBrowser->alignment();
   //m_forward->ui.textBrowser->setAlignment(ali);
@@ -475,7 +511,8 @@ void monitors::start(){
   ui.pushButton->setEnabled(false); 
   ui.pushButton_3->setEnabled(true);
   ui.pushButton_2->setEnabled(false);
-  m_fname = util::time_to_str()+".csv";
+  ui.pushButton_4->setEnabled(false);
+  if (m_fname == "") m_fname = util::time_to_str()+".csv";
   m_fout = std::ofstream(m_fname.c_str());
   m_fout<<"# Record time: "<<util::highrestime_ns()<<"\n# timestamp,  ";
   size_t as = std::extent<decltype(util::item_names)>::value;
@@ -546,6 +583,7 @@ void monitors::stop(){
   ui.pushButton_3->setEnabled(false);
   ui.pushButton->setEnabled(true);
   ui.pushButton_2->setEnabled(true);
+  ui.pushButton_4->setEnabled(true);
 }
 
 void monitors::update_mode(){
@@ -725,24 +763,19 @@ void monitors::adjust_flow(){
 void monitors::adjust_pump(){
   std::stringstream text(ui.lineEdit_3->text().toStdString().c_str());
   uint16_t p; text>>p;
-  if (text.fail()) {
-    log(1,"please input uint16_t format");
-    return;
-  }
-  Pump* ptr =  dynamic_cast<Pump*>(m_parent->m_comps.at("Pump"));
-  
+  if (text.fail()) { log(1,"please input uint16_t format"); return; }
   std::stringstream sstr; 
-  if (p<ptr->m_range[0] && p>ptr->m_range[1]){
+  uint16_t range[2] = {140,1000};
+  if (p<range[0] && p>range[1]){
     sstr<<"please input uint16_t in range ["<<
-      ptr-> m_range[0]<<","<<ptr->m_range[1]<<"]";
-    log(1,sstr.str());
-    return; }
+      range[0]<<","<<range[1]<<"]";
+    log(1,sstr.str()); return; }
   sstr.clear();
   modbus_t* mbs_ctx = m_modbus_context;
   if (modbus_write_register(mbs_ctx,REG_PUMP_SPEED_SV,p)==1){
-    sstr<<"set pwm pump Ok. valve "<<p/(float)ptr->m_range[1]<<"%";
+    sstr<<"Set pwm pump ok. valve "<<100.*p/(float)range[1]<<"%";
     log(0,sstr.str().c_str()); return; }
-  sstr<<"set pwm pump Failed";
+  sstr<<"Set pwm pump failed";
   log(2,sstr.str().c_str()); }
 
 void monitors::get(){

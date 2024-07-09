@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1370</width>
-    <height>820</height>
+    <width>1363</width>
+    <height>843</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>10</x>
      <y>440</y>
      <width>431</width>
-     <height>285</height>
+     <height>281</height>
     </rect>
    </property>
   </widget>
@@ -304,7 +304,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>411</width>
+      <width>339</width>
       <height>51</height>
      </rect>
     </property>
@@ -317,12 +317,19 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox_2"/>
+      <widget class="QComboBox" name="comboBox_2">
+       <property name="statusTip">
+        <string extracomment="Baud:19200;Parity:None;DataBits:8;StopBits:2"/>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_5">
+       <property name="statusTip">
+        <string extracomment="Server Address"/>
+       </property>
        <property name="text">
-        <string>Server Address</string>
+        <string>Address</string>
        </property>
       </widget>
      </item>
@@ -343,7 +350,27 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="Line" name="line_4">
+       <property name="orientation">
+        <enum>Qt::Orientation::Vertical</enum>
+       </property>
+      </widget>
+     </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="pushButton_14">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>33</y>
+      <width>80</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>scan</string>
+    </property>
    </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_4">
@@ -352,7 +379,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>450</x>
      <y>690</y>
      <width>911</width>
-     <height>115</height>
+     <height>110</height>
     </rect>
    </property>
    <property name="title">
@@ -361,10 +388,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <widget class="QTextBrowser" name="textBrowser_3">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>20</y>
-      <width>901</width>
-      <height>91</height>
+      <x>10</x>
+      <y>30</y>
+      <width>891</width>
+      <height>71</height>
      </rect>
     </property>
    </widget>
@@ -391,10 +418,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="3">
-      <widget class="QPushButton" name="pushButton_4">
-       <property name="text">
-        <string>Save...</string>
+     <item row="0" column="2">
+      <widget class="Line" name="line_3">
+       <property name="orientation">
+        <enum>Qt::Orientation::Vertical</enum>
        </property>
       </widget>
      </item>
@@ -412,15 +439,25 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <widget class="Line" name="line_3">
-       <property name="orientation">
-        <enum>Qt::Orientation::Vertical</enum>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="text">
+        <string>Save...</string>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QWidget" name="widget_4" native="true">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>810</y>
+     <width>981</width>
+     <height>31</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>
