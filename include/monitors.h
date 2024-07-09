@@ -41,7 +41,7 @@ QT_CHARTS_USE_NAMESPACE
 
 struct v_led : public QWidget{
   v_led(QWidget* parent) : QWidget(parent) {}
-  QColor m_color;
+  QColor m_color = QColor("#86858c");
 
 public:
   void setColor(QColor color) {m_color = color;}
@@ -60,6 +60,7 @@ class axis_tag;
 class monitors : public QWidget{
   Q_OBJECT
   typedef SwitchButton switch_button_t;
+  typedef v_led v_led_t;
 public:
   //inline QSize sizeHint() const override {return QSize(1580,990);}
   monitors(mainwindow*,QWidget* parent=nullptr);
@@ -96,6 +97,7 @@ public:
 
   std::ofstream m_fout;
   forward* m_forward;
+  std::vector<v_led_t*> m_leds;
 
   //void append(std::string const&)
   

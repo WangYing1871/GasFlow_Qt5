@@ -105,7 +105,7 @@ void v_led::paintEvent(QPaintEvent*){
   painter.save();
   painter.setPen(Qt::NoPen);
   painter.setBrush(QBrush(m_color));
-  //painter.drawEllipse(QRect(0,0,size().width(),size().height()));
+  painter.drawEllipse(QRect(0,0,size().width(),size().height()));
   //painter.drawEllipse(0,0,100,100);
   painter.restore();
 }
@@ -173,6 +173,10 @@ monitors::monitors(mainwindow* parent,QWidget* sub):
   m_forward->ui.lcdNumber_2->setDigitCount(2);
   m_forward->ui.lcdNumber_3->setDigitCount(2);
   m_forward->ui.lcdNumber_4->setDigitCount(2);
+
+  m_leds.emplace_back(new v_led(m_forward.ui->widget));
+  m_leds.emplace_back(new v_led(m_forward.ui->widget_2));
+  m_leds.emplace_back(new v_led(m_forward.ui->widget_3));
 
   connect(this,&monitors::unconnect_signal,this,&monitors::unconnect);
   //unable_progress_bar(m_forward->ui.progressBar);
@@ -587,14 +591,18 @@ void monitors::update_forward(){
   //v_led mfc_valve(m_forward->ui.widget_2);
   //mfc_led.setColor(dp(m_data_frame.device_coil[0]).c_str());
   //mfc_led.update();
+  m_leds[0]->setColor(m_data_frame.device_coil[0] ? QColor("#88FA36") : QColor("0E1A50"));
+  m_leds[1]->setColor(m_data_frame.device_coil[2] ? QColor("#88FA36") : QColor("0E1A50"));
+  m_leds[2]->setColor(m_data_frame.device_coil[1] ? QColor("#88FA36") : QColor("0E1A50"));
+  for (auto&& x : m_leds) x->update();
 
 
-  m_forward->ui.widget->setStyleSheet(dp(m_data_frame.device_coil[0]).c_str());
-  m_forward->ui.widget_2->setStyleSheet(dp(m_data_frame.device_coil[2]).c_str());
-  m_forward->ui.widget_3->setStyleSheet(dp(m_data_frame.device_coil[1]).c_str());
-  m_forward->ui.widget->update();
-  m_forward->ui.widget_2->update();
-  m_forward->ui.widget_3->update();
+  //m_forward->ui.widget->setStyleSheet(dp(m_data_frame.device_coil[0]).c_str());
+  //m_forward->ui.widget_2->setStyleSheet(dp(m_data_frame.device_coil[2]).c_str());
+  //m_forward->ui.widget_3->setStyleSheet(dp(m_data_frame.device_coil[1]).c_str());
+  //m_forward->ui.widget->update();
+  //m_forward->ui.widget_2->update();
+  //m_forward->ui.widget_3->update();
 
   /*
   if (_is_changed.load()){
@@ -617,6 +625,7 @@ void monitors::closeEvent(QCloseEvent*){
   for (auto&& [x,y] : m_graphs) y->data()->clear();
   ui.pushButton->setEnabled(true);
   ui.pushButton_3->setEnabled(true);
+  for(auto&& x : m_leds) delete x;
 }
 
 void monitors::enable_all(bool v){
