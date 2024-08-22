@@ -24,6 +24,7 @@
 #include "form.h"
 #include "modbus_ifc.h"
 #include "axis_tag.h"
+#include "simple_led.h"
 namespace{
 
 //QSharedPointer<QCPAxisTickerText> axis_tick00(QCPAxis* axis,size_t count,std::string unit=""){
@@ -104,16 +105,16 @@ void unable_progress_bar(QProgressBar* v){
 
 }
 
-void v_led::paintEvent(QPaintEvent*){
-  QPainter painter(this);
-  painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-  painter.save();
-  painter.setPen(Qt::NoPen);
-  painter.setBrush(QBrush(m_color));
-  //painter.drawEllipse(QRect(0,0,size().width(),size().height()));
-  painter.drawEllipse(0,0,30,30);
-  painter.restore();
-}
+//void v_led::paintEvent(QPaintEvent*){
+//  QPainter painter(this);
+//  painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+//  painter.save();
+//  painter.setPen(Qt::NoPen);
+//  painter.setBrush(QBrush(m_color));
+//  //painter.drawEllipse(QRect(0,0,size().width(),size().height()));
+//  painter.drawEllipse(0,0,30,30);
+//  painter.restore();
+//}
 
 
 monitors::monitors(mainwindow* parent,QWidget* sub):
@@ -162,6 +163,7 @@ monitors::monitors(mainwindow* parent,QWidget* sub):
   connect(ui.pushButton_12,&QAbstractButton::clicked,this,&monitors::reset_flow);
   connect(ui.pushButton_13,&QAbstractButton::clicked,this,&monitors::reset_pump);
   connect(ui.pushButton_14,&QAbstractButton::clicked,this,&monitors::reload_serial_port);
+  connect(ui.checkBox,&QAbstractButton::clicked,this,&monitors::set_pump_status);
 
   connect(&mtimer,&QTimer::timeout,this,&monitors::timer_slot1);
 
@@ -183,9 +185,9 @@ monitors::monitors(mainwindow* parent,QWidget* sub):
   m_forward->ui.lcdNumber_3->setDigitCount(2);
   m_forward->ui.lcdNumber_4->setDigitCount(2);
 
-  m_leds.emplace_back(new v_led(m_forward->ui.widget));
-  m_leds.emplace_back(new v_led(m_forward->ui.widget_2));
-  m_leds.emplace_back(new v_led(m_forward->ui.widget_3));
+  m_leds.emplace_back(new simple_led(m_forward->ui.widget,simple_led::e_color::k_green));
+  m_leds.emplace_back(new simple_led(m_forward->ui.widget_2,simple_led::e_color::k_green));
+  m_leds.emplace_back(new simple_led(m_forward->ui.widget_3,simple_led::e_color::k_green));
 
   connect(this,&monitors::unconnect_signal,this,&monitors::unconnect);
   //unable_progress_bar(m_forward->ui.progressBar);
@@ -443,6 +445,38 @@ void monitors::log(size_t mode,std::string const& value){
         util::info_to<QTextBrowser,util::log_mode::k_error>(active,"unknow content mode, display as ERROR!");
 }
 
+void monitors::set_pump_status(){
+  if (!_is_connect){ log(1,"Please connect first"); 
+    ui.checkBox->setCheckable(false); return; }
+  if(!ui.checkBox->isChecked()){
+    if(modbus_write_bit(m_modbus_context,COIL_ONOFF_PUMP,0)==1){
+      log(0,"close pump ok");
+      m_leds[1]->status(simple_led::e_status::k_off); }
+    else{ log(2,"close pump failed"); ui.checkBox->setCheckable(true);} }
+  else{
+    if(modbus_write_bit(m_modbus_context,COIL_ONOFF_PUMP,1)==1){
+      log(0,"open pump ok");
+      m_leds[1]->status(simple_led::e_status::k_on); }
+    else{ log(2,"open pump failed"); ui.checkBox->setCheckable(false);} }
+
+  //if (ui.checkBox->isChecked()){
+  //  bool ptr;
+  //  int ec = modbus_read_bits(m_modbus_context,1,1,&ptr);
+  //  if (ec==1){
+  //    if (ptr==false) { log(0,"pump close already"); ui.checkBox->setCheckable(false);}
+  //    else{
+  //      if(modbus_write_bit(m_modbus_context,COIL_ONOFF_PUMP,0)==1){
+  //        log(0,"close pump ok");
+  //        ui.checkBox->setCheckable(false);
+  //      }else{
+  //        log(1,"close pump false");
+  //      }
+  //    }
+
+  //  }
+  //}
+}
+
 
 
 
@@ -619,28 +653,9 @@ void monitors::update_forward(){
   m_forward->ui.textBrowser->setText(mode_name(m_data_frame.data[REG_CUR_MODE]).c_str());
   m_forward->ui.textBrowser_2->setText(
       state_names[m_data_frame.data[REG_CUR_STATE]].c_str());
-
-  auto const& dp = [](bool v)->std::string{
-    if (v) return "background: #88FA36;";
-    else return "background: #0E1A50;"; };
-
-  //v_led mfc_led(m_forward->ui.widget);
-  //v_led mfc_pump(m_forward->ui.widget_3);
-  //v_led mfc_valve(m_forward->ui.widget_2);
-  //mfc_led.setColor(dp(m_data_frame.device_coil[0]).c_str());
-  //mfc_led.update();
-  m_leds[0]->setColor(m_data_frame.device_coil[0] ? QColor("#88FA36") : QColor("0E1A50"));
-  m_leds[1]->setColor(m_data_frame.device_coil[2] ? QColor("#88FA36") : QColor("0E1A50"));
-  m_leds[2]->setColor(m_data_frame.device_coil[1] ? QColor("#88FA36") : QColor("0E1A50"));
-  for (auto&& x : m_leds) x->update();
-
-
-  //m_forward->ui.widget->setStyleSheet(dp(m_data_frame.device_coil[0]).c_str());
-  //m_forward->ui.widget_2->setStyleSheet(dp(m_data_frame.device_coil[2]).c_str());
-  //m_forward->ui.widget_3->setStyleSheet(dp(m_data_frame.device_coil[1]).c_str());
-  //m_forward->ui.widget->update();
-  //m_forward->ui.widget_2->update();
-  //m_forward->ui.widget_3->update();
+  m_leds[0]->status(m_data_frame.device_coil[0] ? simple_led::e_status::k_on : simple_led::e_status::k_off);
+  m_leds[1]->status(m_data_frame.device_coil[2] ? simple_led::e_status::k_on : simple_led::e_status::k_off);
+  m_leds[2]->status(m_data_frame.device_coil[1] ? simple_led::e_status::k_on : simple_led::e_status::k_off);
 
   /*
   if (_is_changed.load()){

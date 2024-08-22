@@ -1,5 +1,4 @@
 QT +=             \
-  widgets         \
   gui             \
   charts          \
   serialbus       \
@@ -7,12 +6,18 @@ QT +=             \
   serialport      \
   core
 
+greaterThan(QT_MAJOR_VERSION,4): QT += widgets
+
+win32:{ CONFIG += c+=20 }
+win32:{ LIBS += -lws2_32 -lsetupapi }
+unix:{
+  QMAKE_CXXFLAGS += -std=c++2b -Wno-deprecated-copy -Wno-deprecated-enum-enum-conversion
+}
 requires(qtConfig(filedialog))
 
 QMAKE_CXXFLAGS +=                  \
   -std=c++20                       \
   -Wno-deprecated-copy             \
-  -DD_develop                        \
   -Wno-deprecated-enum-enum-conversion \
   -Wno-deprecated-declarations
 

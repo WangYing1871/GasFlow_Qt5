@@ -18,7 +18,9 @@ int main(int argc, char *argv[]){
   mainwindow p;
   //window.setGeometry(0,0,770,830);
   monitors window(&p,nullptr);
+  window.setGeometry(280,80,1363,843);
   window.show();
+
   //window.show();
  
   //SwitchButton sw;

@@ -40,23 +40,26 @@ QT_CHARTS_USE_NAMESPACE
 #include "qcustomplot.h"
 #include "qreadwritelock.h"
 
-struct v_led : public QWidget{
-  v_led(QWidget* parent) : QWidget(parent) {}
-  QColor m_color = QColor("D0CFCC");
 
-public:
-  void setColor(QColor color) {m_color = color;}
-
-protected:
-
-  void paintEvent(QPaintEvent *ev) override;
-  
-};
+//struct v_led : public QWidget{
+//  v_led(QWidget* parent) : QWidget(parent) {}
+//  QColor m_color = QColor("D0CFCC");
+//
+//public:
+//  void setColor(QColor color) {m_color = color;}
+//
+//protected:
+//
+//  void paintEvent(QPaintEvent *ev) override;
+//  
+//};
 
 class QCPRange;
 
 class mainwindow;
 class axis_tag;
+class simple_led;
+
 
 class monitors : public QWidget{
   Q_OBJECT
@@ -66,7 +69,6 @@ public:
   monitors(mainwindow*,QWidget* parent=nullptr);
   ~monitors() noexcept{}
   mainwindow* m_parent;
-  //std::map<std::string,monitor*> m_members;
   void init();
   void init_tables();
 
@@ -98,7 +100,7 @@ public:
 
   std::ofstream m_fout;
   forward* m_forward;
-  std::vector<v_led*> m_leds;
+  std::vector<simple_led*> m_leds;
 
   //void append(std::string const&)
   
@@ -131,6 +133,7 @@ public slots:
   void get();
   void unconnect();
   void reload_serial_port();
+  void set_pump_status();
 
 
 protected:
