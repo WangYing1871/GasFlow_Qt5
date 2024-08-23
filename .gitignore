@@ -1,3 +1,7 @@
-build/
+build
 TODO.md
 README.md
+.*.swp
+.*.swo
+.*.txt
+

@@ -7,6 +7,9 @@
   - add a status bar: date-time, company name etc.
   -
   - reset update value
+  - pump reset error
+
+  - led position
 
 # Basic-function
 

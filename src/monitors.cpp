@@ -451,12 +451,12 @@ void monitors::set_pump_status(){
   if(!ui.checkBox->isChecked()){
     if(modbus_write_bit(m_modbus_context,COIL_ONOFF_PUMP,0)==1){
       log(0,"close pump ok");
-      m_leds[1]->status(simple_led::e_status::k_off); }
+      m_leds[2]->status(simple_led::e_status::k_off); }
     else{ log(2,"close pump failed"); ui.checkBox->setCheckable(true);} }
   else{
     if(modbus_write_bit(m_modbus_context,COIL_ONOFF_PUMP,1)==1){
       log(0,"open pump ok");
-      m_leds[1]->status(simple_led::e_status::k_on); }
+      m_leds[2]->status(simple_led::e_status::k_on); }
     else{ log(2,"open pump failed"); ui.checkBox->setCheckable(false);} }
 
   //if (ui.checkBox->isChecked()){
@@ -781,15 +781,17 @@ void monitors::adjust_pump(){
   if (text.fail()) { log(1,"please input uint16_t format"); return; }
   std::stringstream sstr; 
   uint16_t range[2] = {140,1000};
-  if (p<range[0] && p>range[1]){
+  if (p<range[0] || p>range[1]){
     sstr<<"please input uint16_t in range ["<<
       range[0]<<","<<range[1]<<"]";
     log(1,sstr.str()); return; }
   sstr.clear();
   modbus_t* mbs_ctx = m_modbus_context;
+  info_out(p);
   if (modbus_write_register(mbs_ctx,REG_PUMP_SPEED_SV,p)==1){
     sstr<<"Set pwm pump ok. valve "<<100.*p/(float)range[1]<<"%";
     log(0,sstr.str().c_str()); return; }
+  sstr.clear();
   sstr<<"Set pwm pump failed";
   log(2,sstr.str().c_str()); }
 
